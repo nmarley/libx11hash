@@ -4,7 +4,7 @@
 
 void bin2hex(const char *, char *, size_t);
 void hex2bin(const char *, char *, size_t);
-short int hexdigit2dec(unsigned char);
+unsigned short int hexdigit2dec(unsigned char);
 
 int main(int argc, char *argv[], char *envp[]) {
     const char *str = "02000000b67a40f3cd5804437a108f105533739c37e6229bc1adcab385140b59fd0f0000a71c1aade44bf8425bec0deb611c20b16da3442818ef20489ca1e2512be43eef814cdb52f0ff0f1edbf70100";
@@ -24,7 +24,7 @@ int main(int argc, char *argv[], char *envp[]) {
     printf("%s\n", hexout);
 }
 
-short int hexdigit2dec(unsigned char hex) {
+unsigned short int hexdigit2dec(unsigned char hex) {
     const char *hexchars = "0123456789abcdef";
     unsigned short int index = 0;
 
@@ -40,10 +40,16 @@ void hex2bin(const char *input, char *output, size_t len) {
     unsigned short int j = 0;
 
     while (i < len) {
-        unsigned short dectens = hexdigit2dec((unsigned char)input[i++]);
-        unsigned short decones = hexdigit2dec((unsigned char)input[i++]);
-        unsigned char decval = (dectens * 16) + (decones);
-        output[j++] = decval;
+        // first the tens place, then the ones
+        unsigned short tens = hexdigit2dec((unsigned char)input[i]);
+        unsigned short ones = hexdigit2dec((unsigned char)input[i + 1]);
+
+        // multiply/add to get the value
+        output[j] = (tens * 16) + ones;
+        
+        // increment counters
+        i = i + 2;
+        j = j + 1;
     }
 }
 
