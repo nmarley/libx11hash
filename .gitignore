@@ -1,0 +1,3 @@
+*.o
+libx11hash.a
+x11hash
